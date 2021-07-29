@@ -16,12 +16,15 @@ public class Sala {
         reservas = new ArrayList<>();
     }
 
-    public Reserva addReserva(String nome,LocalDateTime ini, LocalDateTime fim){
-        Reserva r = new Reserva(ini,fim,nome);
+    public Reserva addReserva(Sala s,LocalDateTime ini, LocalDateTime fim){
+        Reserva r = new Reserva(ini,fim,s);
         reservas.add(r);
         return r;
     }
 
+    public void removeReserva(Reserva r){
+        reservas.remove(r);
+    }
 
 
     public String getNome(){

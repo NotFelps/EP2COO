@@ -4,6 +4,7 @@ import java.time.*;
 public class GerenciadorDeSalas {
     
     List<Sala> salas = new ArrayList<>(); 
+    Map<Reserva,Sala> mapa = new HashMap<>();
  
 
     public void adicionaSalaChamada(String nome, int capacidadeMaxima, String descricao) {
@@ -25,14 +26,27 @@ public class GerenciadorDeSalas {
     }
 
     public Reserva reservaSalaChamada(String nomeDaSala, LocalDateTime dataInicial, LocalDateTime dataFinal) {
-        Reserva r = null;
-        Sala s = buscaSala(nomeDaSala);
-        r = s.addReserva(nomeDaSala,dataInicial, dataFinal);
-        return r;
+        try{
+            Reserva r = null;
+            for(Reserva reservas : reservasParaSala(nomeDaSala)){
+                if((reservas.getDataFim().isAfter(dataInicial) && reservas.getDataIni().isBefore(dataInicial)) || (reservas.getDataIni().isBefore(dataFinal) && reservas.getDataFim().isAfter(dataFinal))){
+                    return r;
+                }
+            }
+            Sala s = buscaSala(nomeDaSala);
+            r = s.addReserva(s,dataInicial, dataFinal);
+            mapa.put(r, s);
+            return r;
+        }
+        catch(Exception e){
+            System.out.println("A reserva não pode ser efetuada pois: " + e);
+            return null;
+        }
+        
     }
 
     public void cancelaReserva(Reserva cancelada) {
-       
+       mapa.remove(cancelada);
     }
 
     public Collection<Reserva> reservasParaSala(String nomeSala) {
@@ -47,7 +61,7 @@ public class GerenciadorDeSalas {
         }
     }
 
-    private Sala buscaSala(String nomeSala){
+    public Sala buscaSala(String nomeSala){
         for(Sala s : salas){
             if(s.getNome().equals(nomeSala))
                return s; 

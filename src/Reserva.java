@@ -3,12 +3,12 @@ import java.time.LocalDateTime;
 public class Reserva {
     private LocalDateTime dataIni;
     private LocalDateTime dataFim;
-    private String nomeSala;
+    private Sala sala;
 
-    public Reserva(LocalDateTime dataIni, LocalDateTime dataFim, String nomeSala){
+    public Reserva(LocalDateTime dataIni, LocalDateTime dataFim, Sala sala){
         this.dataIni = dataIni;
         this.dataFim = dataFim;
-        this.nomeSala = nomeSala;
+        this.sala = sala;
     }
 
     public LocalDateTime getDataIni(){
@@ -19,7 +19,7 @@ public class Reserva {
         return dataFim;
     }
 
-    public String getNomeSala(){
-        return nomeSala;
+    public Sala getSala(){
+        return sala;
     }
 }
