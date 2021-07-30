@@ -4,14 +4,14 @@ import java.util.List;
 
 public class Sala {
     private String nome;
-    private String observação;
+    private String observacao;
     private int capacidadeMax;
     private String local;
     private List<Reserva> reservas;
 
-    public Sala(String nome, int capacidadeMax, String observação){
+    public Sala(String nome, int capacidadeMax, String observacao){
         this.nome = nome;
-        this.observação = observação;
+        this.observacao = observacao;
         this.capacidadeMax = capacidadeMax;
         reservas = new ArrayList<>();
     }
@@ -32,7 +32,7 @@ public class Sala {
     }
 
     public String getDesc(){
-        return observação;
+        return observacao;
     }
 
     public int getCapa(){

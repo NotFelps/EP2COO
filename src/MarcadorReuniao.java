@@ -5,13 +5,15 @@ import java.util.*;
 public class MarcadorReuniao {
     private LocalDate dataIni;
     private LocalDate dataFim;
-    private Set<Participante> lista;
-
+    private List<Participante> lista;
+    
+    
 
     public void marcarReuniaoEntre(LocalDate dataInicial, LocalDate dataFinal, Collection<String> listaDeParticipantes){
         dataIni = dataInicial;
         dataFim = dataFinal;
-        lista = new HashSet<>();
+        lista = new LinkedList<>();
+   
         for(String participante : listaDeParticipantes){
             Participante p = new Participante();
             p.setPart(participante);
@@ -30,7 +32,34 @@ public class MarcadorReuniao {
         }
     }
 
-    public void mostraSobreposicao(){
+    //função que realiza a busca em profundidade na lista com os participantes
+    void prof(Set<Disponibilidade> listaresp, int i, int j, LocalDateTime auxinicio,LocalDateTime auxfim) {
+        List<Disponibilidade> l = lista.get(i).getDisp();
+        l.get(j).mudarFlag(1);
+        int primeiroj = j;
+        
+        while (j < l.size()) {
+            if (lista.get(i+1).getDisp().get(j).getFlag() == 0) {
+                if(auxinicio.isBefore(lista.get(i+1).getDisp().get(j).getDataFim()) && auxfim.isAfter(lista.get(i+1).getDisp().get(j).getDataIni())) {
+                    if(i==lista.size()-1) {
+                        Disponibilidade d = new Disponibilidade();
+                        d.setDisponibilidade(auxinicio, auxfim);
+                        listaresp.add(d);
+                    } else {
+                    prof(listaresp, i+1, j, auxinicio, auxfim);
+                    }
+                }
+               
+            }
+            j++;
+        }
+        l.get(primeiroj).mudarFlag(2);
+    }
+
+
+    public void mostraSobreposicao(){                         //vai criar a lista com as respostas (horarios possiveis de reuniao)
+       
+        //mostra todas as disponibilidades possiveis ----- PRONTO -----
         for(Participante p : lista){
             System.out.print("Nome: "+ p.getNome() + " Disponibilidade: ");
             for(Disponibilidade d : p.getDisp()){
@@ -38,6 +67,25 @@ public class MarcadorReuniao {
             }
             System.out.print("\n");
         }
+        ///////////////////////////////////////////////
+        //agora é a parte que cria a lista com os horarios possiveis de reuniao
+        /* A ideia é realizar uma busca em profundidade entre todos os participantes
+        e seus respectivos horários disponíveis, e durante o processor ir criando uma lista 
+        com a resposta (horários possíveis de reunião com todos os participantes) */
+
+        Set<Disponibilidade> listaresp;
+        listaresp = new HashSet<>();           //lista com a resposta
+
+        LocalDateTime auxinicio = lista.get(0).getDisp().get(0).getDataIni();
+        LocalDateTime auxfim = lista.get(0).getDisp().get(0).getDataFim();     //variavel auxiliar de resposta
+
+        prof(listaresp, 0, 0, auxinicio, auxfim);
+        
+
+        
+
+
+        ///////////////////////////////////////////////
     }
 
     public LocalDate getdataIni(){
@@ -48,7 +96,7 @@ public class MarcadorReuniao {
         return dataFim;
     }
 
-    public Set<Participante> getLista(){
+    public List<Participante> getLista(){
         return lista;
     }
 }
