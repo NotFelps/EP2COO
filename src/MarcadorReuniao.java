@@ -35,25 +35,42 @@ public class MarcadorReuniao {
     //função que realiza a busca em profundidade na lista com os participantes
     void prof(Set<Disponibilidade> listaresp, int i, int j, LocalDateTime auxinicio,LocalDateTime auxfim) {
         List<Disponibilidade> l = lista.get(i).getDisp();
-        l.get(j).mudarFlag(1);
-        int primeiroj = j;
-        
-        while (j < l.size()) {
+        //l.get(j).mudarFlag(1);
+        //int primeiroj = j;
+        LocalDateTime auxiniciovelho = auxinicio;
+        LocalDateTime auxfimvelho = auxfim;
+           
+        while (j < lista.get(i+1).getDisp().size()) {
+
             if (lista.get(i+1).getDisp().get(j).getFlag() == 0) {
-                if(auxinicio.isBefore(lista.get(i+1).getDisp().get(j).getDataFim()) && auxfim.isAfter(lista.get(i+1).getDisp().get(j).getDataIni())) {
-                    if(i==lista.size()-1) {
+
+                /////////////////////////////////////////////////////
+
+                // Caso haja intersecção entre as disponibilidades
+
+                // Esse if verifica se há intersecção
+                if( (auxiniciovelho.isBefore(lista.get(i+1).getDisp().get(j).getDataFim()) || auxiniciovelho.isEqual(lista.get(i+1).getDisp().get(j).getDataFim())) 
+                 && (auxfimvelho.isAfter(lista.get(i+1).getDisp().get(j).getDataIni()) || auxfimvelho.isEqual(lista.get(i+1).getDisp().get(j).getDataIni()))) {   
+
+                    //as duas linhas seguintes arrumam os valores de aux com a intersecção entre os valores das duas disponibilidades
+                    if(auxiniciovelho.isBefore(lista.get(i+1).getDisp().get(j).getDataIni())) auxinicio = lista.get(i+1).getDisp().get(j).getDataIni();
+                    if(auxfimvelho.isAfter(lista.get(i+1).getDisp().get(j).getDataFim())) auxfim = lista.get(i+1).getDisp().get(j).getDataFim(); 
+
+                    if(i==lista.size()-2) {                            //caso esteja no penúltimo participante, coloca o aux na lista de resposta (pois as comparações são com i+1)
                         Disponibilidade d = new Disponibilidade();
                         d.setDisponibilidade(auxinicio, auxfim);
                         listaresp.add(d);
-                    } else {
-                    prof(listaresp, i+1, j, auxinicio, auxfim);
+                        System.out.print("Uma disponibilidade :" + auxinicio + "//"+ auxfim+"\n");
+                    } else {                                          //caso os dois valores possuam um ponto em comum, mas ainda não seja o ultimo participante
+                        prof(listaresp, i+1, 0, auxinicio, auxfim);
                     }
                 }
-               
+                /////////////////////////////////////////////////////
             }
             j++;
         }
-        l.get(primeiroj).mudarFlag(2);
+        
+        //l.get(primeiroj).mudarFlag(2);
     }
 
 
@@ -76,11 +93,17 @@ public class MarcadorReuniao {
         Set<Disponibilidade> listaresp;
         listaresp = new HashSet<>();           //lista com a resposta
 
-        LocalDateTime auxinicio = lista.get(0).getDisp().get(0).getDataIni();
-        LocalDateTime auxfim = lista.get(0).getDisp().get(0).getDataFim();     //variavel auxiliar de resposta
-
-        prof(listaresp, 0, 0, auxinicio, auxfim);
         
+        
+        int m = 0;
+        while(m < lista.get(0).getDisp().size()) {
+            LocalDateTime auxinicio = lista.get(0).getDisp().get(m).getDataIni();
+            LocalDateTime auxfim = lista.get(0).getDisp().get(m).getDataFim();     //variavel auxiliar de resposta
+            prof(listaresp, 0, 0, auxinicio, auxfim);
+            m++;
+        }
+
+       
 
         
 

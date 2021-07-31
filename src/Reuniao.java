@@ -25,7 +25,7 @@ public class Reuniao {
         LocalDateTime ini4 = LocalDateTime.of(2019, Month.APRIL, 22, 10, 00);
         LocalDateTime fim1 = LocalDateTime.of(2019, Month.APRIL, 20, 10, 00);
         LocalDateTime fim2 = LocalDateTime.of(2019, Month.APRIL, 25, 10, 00);
-        LocalDateTime fim3 = LocalDateTime.of(2019, Month.APRIL, 20, 10, 00);
+        LocalDateTime fim3 = LocalDateTime.of(2019, Month.APRIL, 30, 10, 00);
         LocalDateTime fim4 = LocalDateTime.of(2019, Month.APRIL, 30, 10, 00);
 
         reuniao.indicaDisponibilidadeDe("Juscilei", ini1, fim1);
