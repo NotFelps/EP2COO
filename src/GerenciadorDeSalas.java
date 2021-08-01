@@ -47,6 +47,8 @@ public class GerenciadorDeSalas {
 
     public void cancelaReserva(Reserva cancelada) {
        mapa.remove(cancelada);
+       Sala s = cancelada.getSala();
+       s.removeReserva(cancelada);
     }
 
     public Collection<Reserva> reservasParaSala(String nomeSala) {
@@ -56,8 +58,9 @@ public class GerenciadorDeSalas {
 
     public void imprimeReservasDaSala(String nomeSala) {
         Collection<Reserva> reservas = reservasParaSala(nomeSala);
+        System.out.println("Existem "+reservas.size()+" reservas para a sala "+nomeSala);
         for(Reserva r : reservas){
-            System.out.println("Data de Inicio:" + r.getDataIni()+ " Data Final: " + r.getDataFim());
+            System.out.println("Data de Inicio: " + r.getDataIni()+ " / Data Final: " + r.getDataFim());
         }
     }
 

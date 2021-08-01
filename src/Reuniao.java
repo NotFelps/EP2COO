@@ -9,7 +9,7 @@ public class Reuniao {
         boolean flag = true;
 
         while(flag) {
-            System.out.print("Menu de Reuniao\n1 : Agendar reuniao entre\n2 : Inserir participante\n3 : Inserir disponibilidade\n4 : Mostrar relatorio\n0 : Sair do programa\nInsira sua opcao : ");
+            System.out.print("\nMenu de Reuniao\n1 : Agendar reuniao entre\n2 : Inserir participante\n3 : Inserir disponibilidade\n4 : Mostrar relatorio\n0 : Voltar ao menu principal\nInsira sua opcao : ");
             int op = sc.nextInt();
             switch (op) {
                 case 1 :
@@ -115,15 +115,14 @@ public class Reuniao {
         boolean flag = true;
 
         while(flag) {
-            System.out.println("Menu Principal");
+            System.out.println("\nMenu Reservas");
             System.out.println("1-Adicionar uma nova Sala a lista de Salas");
-            System.out.println("2-Adiciona uma Sala existente a lista");
-            System.out.println("3-Remover uma Sala");
-            System.out.println("4-Retornar a lista de Salas");
-            System.out.println("5-Reserva uma Sala");
-            System.out.println("6-Cancela uma Reserva");
-            System.out.println("7-Retornar todas as Reservas de uma Sala");
-            System.out.println("0-Sair");
+            System.out.println("2-Remover uma Sala");
+            System.out.println("3-Retornar a lista de Salas");
+            System.out.println("4-Reserva uma Sala");
+            System.out.println("5-Cancela uma Reserva");
+            System.out.println("6-Retornar todas as Reservas de uma Sala");
+            System.out.println("0-Voltar ao menu principal");
             System.out.print("Digite sua opcao: ");         
             int op = sc.nextInt();
             switch (op) {
@@ -131,26 +130,22 @@ public class Reuniao {
                     adicionaSalaNova(aux,sc);
                     break;
 
-                case 2 : 
-                    adicionaSalaExistente(aux,sc);
-                    break;
-
-                case 3 :
+                case 2 :
                     removeSala(aux,sc);
                     break;
 
-                case 4 :
+                case 3 :
                     listaSala(aux,sc);
                     break;
-                case 5 :
+                case 4 :
                     reservaSala(aux,sc);
                     break;
 
-                case 6 : 
+                case 5 : 
                     cancelaReserva(aux,sc);
                     break;
 
-                case 7 :
+                case 6 :
                     listaReservasDaSala(aux,sc);
                     break;
                 case 0 :
@@ -163,23 +158,42 @@ public class Reuniao {
         }
     }
     private static void listaReservasDaSala(GerenciadorDeSalas aux,Scanner sc) {
-        System.out.print("Digite o nome da Sala: ");
-        String nome = sc.nextLine();
+        System.out.println("Digite o nome da Sala: ");
+        String nome = sc.next();
         if(aux.buscaSala(nome) == null)
             return;
         aux.imprimeReservasDaSala(nome);
     }
 
     private static void cancelaReserva(GerenciadorDeSalas aux,Scanner sc) {
+        System.out.println("Digite o nome da Sala em que a reserva foi efetuada: ");
+        String nome = sc.next();
+        sc.nextLine();
+        Sala s = aux.buscaSala(nome);
+        if(s == null)
+            return;
 
+        int i = 1;
+            
+        for(Reserva r : s.getReservas()) {
+            System.out.println(i+"-Data inicial : "+r.getDataIni()+" Data final :  "+r.getDataFim());
+            i++;
+        }
+
+        System.out.println("Digite o numero da reserva a ser removida : ");
+        int aux1 = sc.nextInt();
+
+        Reserva r = s.getReservas().get(aux1-1);
+        aux.cancelaReserva(r);
     }
 
     private static void reservaSala(GerenciadorDeSalas aux,Scanner sc) {
-        System.out.print("Digite o nome da Sala: ");
-        String nome = sc.nextLine();
+        System.out.println("Digite o nome da Sala a ser reservada: ");
+        String nome = sc.next();
+        sc.nextLine();
         if(aux.buscaSala(nome) == null)
             return;
-        System.out.print("Data de inicio da disponibilidade (dd/mm/yyyy hh:minmin) : ");
+        System.out.println("Data de inicio da reserva (dd/mm/yyyy hh:minmin) : ");
         LocalDateTime dataInicial;
         LocalDateTime dataFinal;
 
@@ -193,7 +207,7 @@ public class Reuniao {
 
         dataInicial = LocalDateTime.of(datainicial1, tempoinicial1);
 
-        System.out.print("Data de termino do periodo possivel de reuniao (dd/mn/yyyy hh:minmin) : ");
+        System.out.println("Data de termino da reserva (dd/mn/yyyy hh:minmin) : ");
         String datafinal = sc.nextLine();
         String[] tempofinal = datafinal.split(" ");
         String[] datafinalseparada = tempofinal[0].split("/");
@@ -210,26 +224,24 @@ public class Reuniao {
         List<Sala> lista = aux.listaDeSalas();
         System.out.println("Existem " + lista.size() + " Salas:");
         for (Sala sala : lista) {
-            System.out.println("Nome: " + sala.getNome() + " Capacidade: " + sala.getCapa() + " Descricao: " + sala.getDesc());
+            System.out.println("Nome: " + sala.getNome() + " / Capacidade: " + sala.getCapa() + " / Descricao: " + sala.getDesc());
         }
     }
 
     private static void removeSala(GerenciadorDeSalas aux,Scanner sc) {
-        System.out.print("Digite o nome da Sala a ser removida: ");
-        String nome = sc.nextLine();
+        System.out.println("Digite o nome da Sala a ser removida (sem espaco): ");
+        String nome = sc.next();
         aux.removeSalaChamada(nome);
     }
 
-    private static void adicionaSalaExistente(GerenciadorDeSalas aux,Scanner sc) {
-
-    }
-
     private static void adicionaSalaNova(GerenciadorDeSalas aux,Scanner sc) {
-        System.out.print("Digite o nome da Sala: ");
-        String nome = sc.nextLine();
-        System.out.print("\n Digite a capacidade da Sala: ");
-        int cap = sc.nextInt();
-        System.out.print("\n Digite a descrição da Sala: ");
+        System.out.println("Digite o nome da Sala (sem espaco): ");
+        String nome = sc.next();
+        sc.nextLine();
+        System.out.println("Digite a capacidade da Sala: ");
+        int cap = Integer.parseInt(sc.nextLine());
+        //System.out.println("\n");
+        System.out.println("Digite a descricao da Sala: ");
         String desc = sc.nextLine();
         aux.adicionaSalaChamada(nome,cap,desc);
     }
@@ -242,7 +254,7 @@ public class Reuniao {
         Scanner sc = new Scanner(System.in);
         boolean flag = true;
         while(flag){
-            System.out.println("Menu Principal");
+            System.out.println("\nMenu Principal");
             System.out.println("1-Marcar Reuniao");
             System.out.println("2-Reservar Sala");
             System.out.println("0-Sair");
