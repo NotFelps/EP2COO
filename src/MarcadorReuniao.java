@@ -49,7 +49,7 @@ public class MarcadorReuniao {
            
         while (j < lista.get(i+1).getDisp().size()) {
 
-            if (lista.get(i+1).getDisp().get(j).getFlag() == 0) {
+            // if (lista.get(i+1).getDisp().get(j).getFlag() == 0) {
 
                 /////////////////////////////////////////////////////
 
@@ -72,7 +72,7 @@ public class MarcadorReuniao {
                     }
                 }
                 /////////////////////////////////////////////////////
-            }
+            // }
             j++;
         }
         
