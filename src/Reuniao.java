@@ -39,22 +39,26 @@ public class Reuniao {
     }
 
     static void agendaReuniao(MarcadorReuniao aux, Collection<String> lista) {
+        try {
+            Scanner sc = new Scanner(System.in);
+            System.out.print("Data de inicio do periodo possivel de reuniao (dd/mm/yyyy) : ");
+            LocalDate dataInicial;
+            LocalDate dataFinal;
 
-        Scanner sc = new Scanner(System.in);
-        System.out.print("Data de inicio do periodo possivel de reuniao (dd/mm/yyyy) : ");
-        LocalDate dataInicial;
-        LocalDate dataFinal;
+            String datainicial = sc.nextLine();
+            String[] datainicialseparada = datainicial.split("/");
+            dataInicial = LocalDate.of(Integer.parseInt(datainicialseparada[2]), Integer.parseInt(datainicialseparada[1]), Integer.parseInt(datainicialseparada[0]));
 
-        String datainicial = sc.nextLine();
-        String[] datainicialseparada = datainicial.split("/");
-        dataInicial = LocalDate.of(Integer.parseInt(datainicialseparada[2]), Integer.parseInt(datainicialseparada[1]), Integer.parseInt(datainicialseparada[0]));
+            System.out.print("Data de termino do periodo possivel de reuniao (dd/mm/yyyy) : ");
+            String datafinal = sc.nextLine();
+            String[] datafinalseparada = datafinal.split("/");
+            dataFinal = LocalDate.of(Integer.parseInt(datafinalseparada[2]), Integer.parseInt(datafinalseparada[1]), Integer.parseInt(datafinalseparada[0]));
 
-        System.out.print("Data de termino do periodo possivel de reuniao (dd/mm/yyyy) : ");
-        String datafinal = sc.nextLine();
-        String[] datafinalseparada = datafinal.split("/");
-        dataFinal = LocalDate.of(Integer.parseInt(datafinalseparada[2]), Integer.parseInt(datafinalseparada[1]), Integer.parseInt(datafinalseparada[0]));
-
-        aux.marcarReuniaoEntre(dataInicial, dataFinal, lista);
+            aux.marcarReuniaoEntre(dataInicial, dataFinal, lista);
+        } catch (Exception e) {
+            System.out.println("Data invalida!");
+        }
+        
 
     }
 
@@ -70,7 +74,8 @@ public class Reuniao {
     }
 
     static void insereDisponibilidade(MarcadorReuniao aux, Collection<String> lista) {
-        Scanner sc = new Scanner(System.in);
+        try {
+            Scanner sc = new Scanner(System.in);
         System.out.println("Insira o email do participante : ");
         String email = sc.nextLine();
         if(lista.contains(email)) {
@@ -90,7 +95,7 @@ public class Reuniao {
 
             dataInicial = LocalDateTime.of(datainicial1, tempoinicial1);
 
-            System.out.print("Data de termino do periodo possivel de reuniao (dd/mn/yyyy hh:minmin) : ");
+            System.out.print("Data de termino da disponibilidade (dd/mn/yyyy hh:minmin) : ");
             String datafinal = sc.nextLine();
             String[] tempofinal = datafinal.split(" ");
             String[] datafinalseparada = tempofinal[0].split("/");
@@ -104,6 +109,9 @@ public class Reuniao {
 
         } else {
             System.out.println("Participante nao encontrado!");
+        }
+        } catch (Exception e) {
+            System.out.println("Data invalida!");
         }
     }
 
