@@ -6,18 +6,27 @@ public class MarcadorReuniao {
     private LocalDate dataIni;
     private LocalDate dataFim;
     private List<Participante> lista;
+    private Set<Disponibilidade> listaresp;
     
-    
+    MarcadorReuniao() {
+        listaresp = new HashSet<>();
+        lista = new LinkedList<>();
+    }
+
+    public void addParticipante(String email) {
+           
+            Participante p = new Participante();
+            p.setPart(email);
+            lista.add(p);
+    }
+
 
     public void marcarReuniaoEntre(LocalDate dataInicial, LocalDate dataFinal, Collection<String> listaDeParticipantes){
         dataIni = dataInicial;
         dataFim = dataFinal;
-        lista = new LinkedList<>();
    
         for(String participante : listaDeParticipantes){
-            Participante p = new Participante();
-            p.setPart(participante);
-            lista.add(p);
+            addParticipante(participante);
         }
     }
 
@@ -33,10 +42,8 @@ public class MarcadorReuniao {
     }
 
     //função que realiza a busca em profundidade na lista com os participantes
-    void prof(Set<Disponibilidade> listaresp, int i, int j, LocalDateTime auxinicio,LocalDateTime auxfim) {
+    void prof(int i, int j, LocalDateTime auxinicio,LocalDateTime auxfim) {
         List<Disponibilidade> l = lista.get(i).getDisp();
-        //l.get(j).mudarFlag(1);
-        //int primeiroj = j;
         LocalDateTime auxiniciovelho = auxinicio;
         LocalDateTime auxfimvelho = auxfim;
            
@@ -60,9 +67,8 @@ public class MarcadorReuniao {
                         Disponibilidade d = new Disponibilidade();
                         d.setDisponibilidade(auxinicio, auxfim);
                         listaresp.add(d);
-                        System.out.print("Uma disponibilidade :" + auxinicio + "//"+ auxfim+"\n");
                     } else {                                          //caso os dois valores possuam um ponto em comum, mas ainda não seja o ultimo participante
-                        prof(listaresp, i+1, 0, auxinicio, auxfim);
+                        prof(i+1, 0, auxinicio, auxfim);
                     }
                 }
                 /////////////////////////////////////////////////////
@@ -70,17 +76,18 @@ public class MarcadorReuniao {
             j++;
         }
         
-        //l.get(primeiroj).mudarFlag(2);
     }
 
 
     public void mostraSobreposicao(){                         //vai criar a lista com as respostas (horarios possiveis de reuniao)
        
+        listaresp = new HashSet<>();
+
         //mostra todas as disponibilidades possiveis ----- PRONTO -----
         for(Participante p : lista){
             System.out.print("Nome: "+ p.getNome() + " Disponibilidade: ");
             for(Disponibilidade d : p.getDisp()){
-                System.out.print(" " + d.getDataIni() + " - " + d.getDataFim() + " ");
+                System.out.print(" (" + d.getDataIni() + " - " + d.getDataFim() + ") ");
             }
             System.out.print("\n");
         }
@@ -90,20 +97,34 @@ public class MarcadorReuniao {
         e seus respectivos horários disponíveis, e durante o processor ir criando uma lista 
         com a resposta (horários possíveis de reunião com todos os participantes) */
 
-        Set<Disponibilidade> listaresp;
-        listaresp = new HashSet<>();           //lista com a resposta
+        
 
         
-        
-        int m = 0;
-        while(m < lista.get(0).getDisp().size()) {
-            LocalDateTime auxinicio = lista.get(0).getDisp().get(m).getDataIni();
-            LocalDateTime auxfim = lista.get(0).getDisp().get(m).getDataFim();     //variavel auxiliar de resposta
-            prof(listaresp, 0, 0, auxinicio, auxfim);
-            m++;
+        if(lista.size() > 1) {
+            int m = 0;
+            while(m < lista.get(0).getDisp().size()) {
+                LocalDateTime auxinicio = lista.get(0).getDisp().get(m).getDataIni();
+                LocalDateTime auxfim = lista.get(0).getDisp().get(m).getDataFim();     //variavel auxiliar de resposta
+                prof(0, 0, auxinicio, auxfim);
+                m++;
+            }
         }
 
-       
+        if(listaresp.size() != 0) {
+
+            System.out.print(listaresp.size()+" horarios possiveis de reuniao : ");
+            for(Disponibilidade d : listaresp) {
+                LocalDateTime inicial1 = dataIni.atStartOfDay();
+                LocalDateTime final1 = dataFim.atTime(23, 59);
+
+                if( (d.getDataIni().isAfter(inicial1) || d.getDataIni().isEqual(inicial1)) && (d.getDataFim().isBefore(final1) || d.getDataIni().isEqual(final1))) {
+                    System.out.print(" ("+d.getDataIni() + " - " + d.getDataFim()+") ");
+                }
+            }
+            System.out.print("\n");
+        } else {
+            System.out.println("Sem horarios possiveis de reuniao com todos os participantes.");
+        }
 
         
 

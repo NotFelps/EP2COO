@@ -4,37 +4,116 @@ import java.util.*;
 
 public class Reuniao {
 
+
+    //static void reuniaomenu() {
+    //
+    //}
     public static void main(String[] args) {
-        LocalDate dataInicial = LocalDate.of(2019, Month.APRIL, 10);
-        LocalDate dataFinal = LocalDate.of(2019, Month.APRIL, 30);
+       
         Set<String> lista = new HashSet<String>();
+        MarcadorReuniao aux = new MarcadorReuniao();
 
+        Scanner sc = new Scanner(System.in);
+        boolean flag = true;
 
-        lista.add("Juscilei");
-        lista.add("Lima");
-        lista.add("Senna");
-        //lista.add("Omo");
+        while(flag) {
+            System.out.print("1 : Agendar reuniao entre\n2 : Inserir participante\n3 : Inserir disponibilidade\n4 : Mostrar relatorio\n0 : Sair do programa\nInsira sua opcao : ");
+            int op = sc.nextInt();
+            switch (op) {
+                case 1 :
+                    agendaReuniao(aux, lista);
+                    break;
 
-        MarcadorReuniao reuniao = new MarcadorReuniao();
-        reuniao.marcarReuniaoEntre(dataInicial, dataFinal, lista);
+                case 2 : 
+                    insereParticipante(aux, lista);
+                    break;
 
+                case 3 :
+                    insereDisponibilidade(aux, lista);
+                    break;
 
-        LocalDateTime ini1 = LocalDateTime.of(2019, Month.APRIL, 15, 10, 00);
-        LocalDateTime ini2 = LocalDateTime.of(2019, Month.APRIL, 14, 10, 00);
-        LocalDateTime ini3 = LocalDateTime.of(2019, Month.APRIL, 11, 10, 00);
-        LocalDateTime ini4 = LocalDateTime.of(2019, Month.APRIL, 22, 10, 00);
-        LocalDateTime fim1 = LocalDateTime.of(2019, Month.APRIL, 20, 10, 00);
-        LocalDateTime fim2 = LocalDateTime.of(2019, Month.APRIL, 25, 10, 00);
-        LocalDateTime fim3 = LocalDateTime.of(2019, Month.APRIL, 30, 10, 00);
-        LocalDateTime fim4 = LocalDateTime.of(2019, Month.APRIL, 30, 10, 00);
-
-        reuniao.indicaDisponibilidadeDe("Juscilei", ini1, fim1);
-        reuniao.indicaDisponibilidadeDe("Juscilei", ini4, fim4);
-        reuniao.indicaDisponibilidadeDe("Lima", ini2, fim2);
-        reuniao.indicaDisponibilidadeDe("Senna", ini3, fim3);
-        //reuniao.indicaDisponibilidadeDe("Omo", ini4, fim4);
-        
-        reuniao.mostraSobreposicao();
+                case 4 :
+                    mostraRelatorio(aux, lista);
+                    break;
+                
+                case 0 :
+                    flag = false;
+                    break;
+            }
+        }
     }
 
+    static void agendaReuniao(MarcadorReuniao aux, Collection<String> lista) {
+
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Data de inicio do periodo possivel de reuniao (dd/mm/yyyy) : ");
+        LocalDate dataInicial;
+        LocalDate dataFinal;
+
+        String datainicial = sc.nextLine();
+        String[] datainicialseparada = datainicial.split("/");
+        dataInicial = LocalDate.of(Integer.parseInt(datainicialseparada[2]), Integer.parseInt(datainicialseparada[1]), Integer.parseInt(datainicialseparada[0]));
+
+        System.out.print("Data de termino do periodo possivel de reuniao (dd/mm/yyyy) : ");
+        String datafinal = sc.nextLine();
+        String[] datafinalseparada = datafinal.split("/");
+        dataFinal = LocalDate.of(Integer.parseInt(datafinalseparada[2]), Integer.parseInt(datafinalseparada[1]), Integer.parseInt(datafinalseparada[0]));
+
+        aux.marcarReuniaoEntre(dataInicial, dataFinal, lista);
+
+    }
+
+
+    static void insereParticipante(MarcadorReuniao aux, Collection<String> lista) {
+
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Email do participante : ");
+        String email = sc.nextLine();
+
+        lista.add(email);
+        aux.addParticipante(email);
+    }
+
+    static void insereDisponibilidade(MarcadorReuniao aux, Collection<String> lista) {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Insira o email do participante : ");
+        String email = sc.nextLine();
+        if(lista.contains(email)) {
+
+            System.out.print("Data de inicio da disponibilidade (dd/mm/yyyy hh:minmin) : ");
+            LocalDateTime dataInicial;
+            LocalDateTime dataFinal;
+            
+
+            String datainicial = sc.nextLine();
+            String[] tempoinicial = datainicial.split(" ");
+            String[] datainicialseparada = tempoinicial[0].split("/");
+            String[] tempoinicialseparado = tempoinicial[1].split(":");
+            LocalDate datainicial1 = LocalDate.of(Integer.parseInt(datainicialseparada[2]), Integer.parseInt(datainicialseparada[1]), Integer.parseInt(datainicialseparada[0]));
+            LocalTime tempoinicial1 = LocalTime.of(Integer.parseInt(tempoinicialseparado[0]), Integer.parseInt(tempoinicialseparado[1]));
+
+
+            dataInicial = LocalDateTime.of(datainicial1, tempoinicial1);
+
+            System.out.print("Data de termino do periodo possivel de reuniao (dd/mn/yyyy hh:minmin) : ");
+            String datafinal = sc.nextLine();
+            String[] tempofinal = datafinal.split(" ");
+            String[] datafinalseparada = tempofinal[0].split("/");
+            String[] tempofinalseparado = tempofinal[1].split(":");
+            LocalDate datafinal1 = LocalDate.of(Integer.parseInt(datafinalseparada[2]), Integer.parseInt(datafinalseparada[1]), Integer.parseInt(datafinalseparada[0]));
+            LocalTime tempofinal1 = LocalTime.of(Integer.parseInt(tempofinalseparado[0]), Integer.parseInt(tempofinalseparado[1]));
+
+            dataFinal = LocalDateTime.of(datafinal1, tempofinal1);
+
+            aux.indicaDisponibilidadeDe(email, dataInicial, dataFinal);
+
+        } else {
+            System.out.println("Participante nao encontrado!");
+        }
+    }
+
+
+    static void mostraRelatorio(MarcadorReuniao aux, Collection<String> lista) {
+        aux.mostraSobreposicao();
+    }
 }
