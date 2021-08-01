@@ -8,7 +8,7 @@ public class GerenciadorDeSalas {
  
 
     public void adicionaSalaChamada(String nome, int capacidadeMaxima, String descricao) {
-        Sala s = new Sala(nome,capacidadeMaxima,descricao);
+        Sala s = new Sala(nome,capacidadeMaxima,descricao,mapa.size()+1);
         adicionaSala(s);
     }
 
@@ -29,7 +29,8 @@ public class GerenciadorDeSalas {
         try{
             Reserva r = null;
             for(Reserva reservas : reservasParaSala(nomeDaSala)){
-                if((reservas.getDataFim().isAfter(dataInicial) && reservas.getDataIni().isBefore(dataInicial)) || (reservas.getDataIni().isBefore(dataFinal) && reservas.getDataFim().isAfter(dataFinal))){
+                if((reservas.getDataFim().isAfter(dataInicial) && reservas.getDataIni().isBefore(dataInicial)) || (reservas.getDataIni().isBefore(dataFinal) && reservas.getDataFim().isAfter(dataFinal)) 
+                || (reservas.getDataIni().isEqual(dataInicial)) || (reservas.getDataFim().isEqual(dataFinal))){
                     return r;
                 }
             }

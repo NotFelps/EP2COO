@@ -116,7 +116,7 @@ public class Reuniao {
 
         while(flag) {
             System.out.println("\nMenu Reservas");
-            System.out.println("1-Adicionar uma nova Sala a lista de Salas");
+            System.out.println("1-Adicionar uma nova Sala");
             System.out.println("2-Remover uma Sala");
             System.out.println("3-Retornar a lista de Salas");
             System.out.println("4-Reserva uma Sala");
@@ -188,36 +188,46 @@ public class Reuniao {
     }
 
     private static void reservaSala(GerenciadorDeSalas aux,Scanner sc) {
-        System.out.println("Digite o nome da Sala a ser reservada: ");
-        String nome = sc.next();
-        sc.nextLine();
-        if(aux.buscaSala(nome) == null)
-            return;
-        System.out.println("Data de inicio da reserva (dd/mm/yyyy hh:minmin) : ");
-        LocalDateTime dataInicial;
-        LocalDateTime dataFinal;
+        try {
+            System.out.println("Digite o nome da Sala a ser reservada: ");
+            String nome = sc.next();
+            sc.nextLine();
+            if(aux.buscaSala(nome) == null)
+                return;
+            System.out.println("Data de inicio da reserva (dd/mm/yyyy hh:minmin) : ");
+            LocalDateTime dataInicial;
+            LocalDateTime dataFinal;
 
-        String datainicial = sc.nextLine();
-        String[] tempoinicial = datainicial.split(" ");
-        String[] datainicialseparada = tempoinicial[0].split("/");
-        String[] tempoinicialseparado = tempoinicial[1].split(":");
-        LocalDate datainicial1 = LocalDate.of(Integer.parseInt(datainicialseparada[2]), Integer.parseInt(datainicialseparada[1]), Integer.parseInt(datainicialseparada[0]));
-        LocalTime tempoinicial1 = LocalTime.of(Integer.parseInt(tempoinicialseparado[0]), Integer.parseInt(tempoinicialseparado[1]));
+            String datainicial = sc.nextLine();
+            String[] tempoinicial = datainicial.split(" ");
+            String[] datainicialseparada = tempoinicial[0].split("/");
+            String[] tempoinicialseparado = tempoinicial[1].split(":");
+            LocalDate datainicial1 = LocalDate.of(Integer.parseInt(datainicialseparada[2]), Integer.parseInt(datainicialseparada[1]), Integer.parseInt(datainicialseparada[0]));
+            LocalTime tempoinicial1 = LocalTime.of(Integer.parseInt(tempoinicialseparado[0]), Integer.parseInt(tempoinicialseparado[1]));
 
 
-        dataInicial = LocalDateTime.of(datainicial1, tempoinicial1);
+            dataInicial = LocalDateTime.of(datainicial1, tempoinicial1);
 
-        System.out.println("Data de termino da reserva (dd/mn/yyyy hh:minmin) : ");
-        String datafinal = sc.nextLine();
-        String[] tempofinal = datafinal.split(" ");
-        String[] datafinalseparada = tempofinal[0].split("/");
-        String[] tempofinalseparado = tempofinal[1].split(":");
-        LocalDate datafinal1 = LocalDate.of(Integer.parseInt(datafinalseparada[2]), Integer.parseInt(datafinalseparada[1]), Integer.parseInt(datafinalseparada[0]));
-        LocalTime tempofinal1 = LocalTime.of(Integer.parseInt(tempofinalseparado[0]), Integer.parseInt(tempofinalseparado[1]));
+            System.out.println("Data de termino da reserva (dd/mn/yyyy hh:minmin) : ");
+            String datafinal = sc.nextLine();
+            String[] tempofinal = datafinal.split(" ");
+            String[] datafinalseparada = tempofinal[0].split("/");
+            String[] tempofinalseparado = tempofinal[1].split(":");
+            LocalDate datafinal1 = LocalDate.of(Integer.parseInt(datafinalseparada[2]), Integer.parseInt(datafinalseparada[1]), Integer.parseInt(datafinalseparada[0]));
+            LocalTime tempofinal1 = LocalTime.of(Integer.parseInt(tempofinalseparado[0]), Integer.parseInt(tempofinalseparado[1]));
 
-        dataFinal = LocalDateTime.of(datafinal1, tempofinal1);
+            dataFinal = LocalDateTime.of(datafinal1, tempofinal1);
 
-        aux.reservaSalaChamada(nome, dataInicial, dataFinal);
+            Reserva r = aux.reservaSalaChamada(nome, dataInicial, dataFinal);
+            if(r == null)
+                System.out.println("A reserva nao pode ser efetuada pois ja existe uma reserva nesse periodo!");
+            else
+                System.out.println("A reserva da sala " + r.getSala().getNome() +" no periodo de: "+ r.getDataIni() + "-" + r.getDataFim() + " foi efetuada com sucesso");
+ 
+        } catch (Exception e) {
+            System.out.println("Um erro ocorreu");
+        }
+        
     }
 
     private static void listaSala(GerenciadorDeSalas aux,Scanner sc) {

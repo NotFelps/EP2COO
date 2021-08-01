@@ -6,13 +6,14 @@ public class Sala {
     private String nome;
     private String observacao;
     private int capacidadeMax;
-    private String local;
+    private int local;
     private List<Reserva> reservas;
 
-    public Sala(String nome, int capacidadeMax, String observacao){
+    public Sala(String nome, int capacidadeMax, String observacao, int local){
         this.nome = nome;
         this.observacao = observacao;
         this.capacidadeMax = capacidadeMax;
+        this.local = local;
         reservas = new ArrayList<>();
     }
 
@@ -37,6 +38,10 @@ public class Sala {
 
     public int getCapa(){
         return capacidadeMax;
+    }
+
+    public int getLocal(){
+        return local;
     }
 
     public List<Reserva> getReservas(){
