@@ -111,17 +111,35 @@ public class MarcadorReuniao {
         }
 
         if(listaresp.size() != 0) {
-
-            System.out.print(listaresp.size()+" horarios possiveis de reuniao : ");
+            int i =0;
+            System.out.print(" horarios possiveis de reuniao : ");
             for(Disponibilidade d : listaresp) {
                 LocalDateTime inicial1 = dataIni.atStartOfDay();
                 LocalDateTime final1 = dataFim.atTime(23, 59);
 
-                if( (d.getDataIni().isAfter(inicial1) || d.getDataIni().isEqual(inicial1)) && (d.getDataFim().isBefore(final1) || d.getDataIni().isEqual(final1))) {
+                if(d.getDataIni().isEqual(d.getDataFim()))
+                    continue;
+
+                if( (d.getDataIni().isAfter(inicial1)) && (d.getDataFim().isBefore(final1)) ) {
                     System.out.print(" ("+d.getDataIni() + " - " + d.getDataFim()+") ");
                 }
+                else if((inicial1.isBefore(d.getDataIni)) && (final1.isBefore(d.getDataFim())) && (final1.isAfter(d.getDataIni()))){
+                    System.out.print(" ("+d.getDataIni() + " - " + final1+") ");
+                }
+                else if((inicial1.isAfter(d.getDataIni)) && (final1.isAfter(d.getDataFim())) && (inicial.isBefore(d.getDataFim()))){
+                    System.out.print(" ("+inicial1 + " - " + d.getDataFim()+") ");
+                }
+                else if((inicial1.isAfter(d.getDataIni)) && (final1.isBefore(d.getDataFim())) && (final1.isAfter(d.getDataIni()))){
+                    System.out.print(" ("+inicial1 + " - " + final1+") ");
+                }
+                else{
+                    i++;
+                }
             }
-            System.out.print("\n");
+            int tam = listaresp.size()-i;
+            if(tam == 0)
+                System.out.print("Nenhum");
+            System.out.print("\nTotal: " + tam+"\n");
         } else {
             System.out.println("Sem horarios possiveis de reuniao com todos os participantes.");
         }
