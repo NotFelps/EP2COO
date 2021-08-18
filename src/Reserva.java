@@ -11,11 +11,11 @@ public class Reserva {
         this.sala = sala;
     }
 
-    public LocalDateTime getDataIni(){
+    public LocalDateTime getInicio(){
         return dataIni;
     }
 
-    public LocalDateTime getDataFim(){
+    public LocalDateTime getFim(){
         return dataFim;
     }
 

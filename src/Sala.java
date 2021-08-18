@@ -6,15 +6,45 @@ public class Sala {
     private String nome;
     private String observacao;
     private int capacidadeMax;
-    private int local;
+    private String local;
     private List<Reserva> reservas;
 
-    public Sala(String nome, int capacidadeMax, String observacao, int local){
+    Sala(){
+        nome = "";
+        observacao = "";
+        capacidadeMax = 0;
+        local = "";
+        reservas = new ArrayList<>();
+    }
+
+    Sala(String nome, int capacidadeMax, String observacao){
+        this.nome = nome;
+        this.observacao = observacao;
+        this.capacidadeMax = capacidadeMax;
+        reservas = new ArrayList<>();
+    }
+
+    public void setLocal(String local){
+        this.local = local;
+    }
+
+    public void setNome(String nome){
+        this.nome = nome;
+    }
+
+    public void setCapacidade(int capacidadeMax){
+        this.capacidadeMax = capacidadeMax;
+    }
+
+    public void setObservacoes(String observacao){
+        this.observacao = observacao;
+    }
+
+    public Sala(String nome, int capacidadeMax, String observacao, String local){
         this.nome = nome;
         this.observacao = observacao;
         this.capacidadeMax = capacidadeMax;
         this.local = local;
-        reservas = new ArrayList<>();
     }
 
     public Reserva addReserva(Sala s,LocalDateTime ini, LocalDateTime fim){
@@ -32,7 +62,7 @@ public class Sala {
         return nome;
     }
 
-    public String getDesc(){
+    public String getObservacoes(){
         return observacao;
     }
 
@@ -40,7 +70,7 @@ public class Sala {
         return capacidadeMax;
     }
 
-    public int getLocal(){
+    public String getLocal(){
         return local;
     }
 

@@ -3,9 +3,7 @@ import java.util.*;
 
 
 public class Reuniao {
-
-
-    static void reuniaomenu(Set<String> lista, MarcadorReuniao aux, Scanner sc) {
+    static void reuniaomenu(Set<String> lista, MarcadorDeReuniao aux, Scanner sc) {
         boolean flag = true;
 
         while(flag) {
@@ -38,7 +36,7 @@ public class Reuniao {
         }
     }
 
-    static void agendaReuniao(MarcadorReuniao aux, Collection<String> lista) {
+    static void agendaReuniao(MarcadorDeReuniao aux, Collection<String> lista) {
         try {
             Scanner sc = new Scanner(System.in);
             System.out.print("Data de inicio do periodo possivel de reuniao (dd/mm/yyyy) : ");
@@ -63,7 +61,7 @@ public class Reuniao {
     }
 
 
-    static void insereParticipante(MarcadorReuniao aux, Collection<String> lista) {
+    static void insereParticipante(MarcadorDeReuniao aux, Collection<String> lista) {
 
         Scanner sc = new Scanner(System.in);
         System.out.println("Email do participante : ");
@@ -73,7 +71,7 @@ public class Reuniao {
         aux.addParticipante(email);
     }
 
-    static void insereDisponibilidade(MarcadorReuniao aux, Collection<String> lista) {
+    static void insereDisponibilidade(MarcadorDeReuniao aux, Collection<String> lista) {
         try {
             Scanner sc = new Scanner(System.in);
         System.out.println("Insira o email do participante : ");
@@ -115,7 +113,7 @@ public class Reuniao {
         }
     }
 
-    static void mostraRelatorio(MarcadorReuniao aux, Collection<String> lista) {
+    static void mostraRelatorio(MarcadorDeReuniao aux, Collection<String> lista) {
         aux.mostraSobreposicao();
     }
 
@@ -184,7 +182,7 @@ public class Reuniao {
         int i = 1;
             
         for(Reserva r : s.getReservas()) {
-            System.out.println(i+"-Data inicial : "+r.getDataIni()+" Data final :  "+r.getDataFim());
+            System.out.println(i+"-Data inicial : "+r.getInicio()+" Data final :  "+r.getFim());
             i++;
         }
 
@@ -230,7 +228,7 @@ public class Reuniao {
             if(r == null)
                 System.out.println("A reserva nao pode ser efetuada pois ja existe uma reserva nesse periodo!");
             else
-                System.out.println("A reserva da sala " + r.getSala().getNome() +" no periodo de: "+ r.getDataIni() + "-" + r.getDataFim() + " foi efetuada com sucesso");
+                System.out.println("A reserva da sala " + r.getSala().getNome() +" no periodo de: "+ r.getInicio() + "-" + r.getFim() + " foi efetuada com sucesso");
  
         } catch (Exception e) {
             System.out.println("Um erro ocorreu");
@@ -242,7 +240,7 @@ public class Reuniao {
         List<Sala> lista = aux.listaDeSalas();
         System.out.println("Existem " + lista.size() + " Salas:");
         for (Sala sala : lista) {
-            System.out.println("Nome: " + sala.getNome() + " / Capacidade: " + sala.getCapa() + " / Descricao: " + sala.getDesc());
+            System.out.println("Nome: " + sala.getNome() + " / Capacidade: " + sala.getCapa() + " / Descricao: " + sala.getObservacoes());
         }
     }
 
@@ -267,7 +265,7 @@ public class Reuniao {
     public static void main(String[] args) {
        
         Set<String> lista = new HashSet<String>();
-        MarcadorReuniao aux = new MarcadorReuniao();
+        MarcadorDeReuniao aux = new MarcadorDeReuniao();
         GerenciadorDeSalas aux2 = new GerenciadorDeSalas();
         Scanner sc = new Scanner(System.in);
         boolean flag = true;

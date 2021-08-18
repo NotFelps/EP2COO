@@ -8,13 +8,19 @@ public class GerenciadorDeSalas {
  
 
     public void adicionaSalaChamada(String nome, int capacidadeMaxima, String descricao) {
-        Sala s = new Sala(nome,capacidadeMaxima,descricao,mapa.size()+1);
+        Sala s = new Sala(nome,capacidadeMaxima,descricao);
         adicionaSala(s);
     }
 
     public void removeSalaChamada(String nomeDaSala) {
         Sala s = buscaSala(nomeDaSala);
-        salas.remove(s);
+        if(s != null){
+            salas.remove(s);
+        }
+        else{
+            System.out.println("Sala inexistente");
+        }
+        
     }
 
     public List<Sala> listaDeSalas() {
@@ -22,21 +28,32 @@ public class GerenciadorDeSalas {
     }
 
     public void adicionaSala(Sala novaSala) {
-        salas.add(novaSala);
+        Sala s = buscaSala(novaSala.getNome());
+
+        if(s == null)
+            salas.add(novaSala);
     }
 
     public Reserva reservaSalaChamada(String nomeDaSala, LocalDateTime dataInicial, LocalDateTime dataFinal) {
         try{
             Reserva r = null;
-            for(Reserva reservas : reservasParaSala(nomeDaSala)){
-                if((reservas.getDataFim().isAfter(dataInicial) && reservas.getDataIni().isBefore(dataInicial)) || (reservas.getDataIni().isBefore(dataFinal) && reservas.getDataFim().isAfter(dataFinal)) 
-                || (reservas.getDataIni().isEqual(dataInicial)) || (reservas.getDataFim().isEqual(dataFinal))){
-                    return r;
-                }
-            }
+            if(dataInicial.isAfter(dataFinal))
+                return r;
+                
             Sala s = buscaSala(nomeDaSala);
-            r = s.addReserva(s,dataInicial, dataFinal);
-            mapa.put(r, s);
+            if(s != null){
+                
+                for(Reserva reservas : reservasParaSala(nomeDaSala)){
+                    if((reservas.getFim().isAfter(dataInicial) && reservas.getInicio().isBefore(dataInicial)) || (reservas.getInicio().isBefore(dataFinal) && reservas.getFim().isAfter(dataFinal)) 
+                    || (reservas.getInicio().isEqual(dataInicial)) || (reservas.getFim().isEqual(dataFinal))){
+                        return r;
+                    }
+                }
+               
+                r = s.addReserva(s,dataInicial, dataFinal);
+                mapa.put(r, s);
+                return r;
+            }
             return r;
         }
         catch(Exception e){
@@ -61,7 +78,7 @@ public class GerenciadorDeSalas {
         Collection<Reserva> reservas = reservasParaSala(nomeSala);
         System.out.println("Existem "+reservas.size()+" reservas para a sala "+nomeSala);
         for(Reserva r : reservas){
-            System.out.println("Data de Inicio: " + r.getDataIni()+ " / Data Final: " + r.getDataFim());
+            System.out.println("Data de Inicio: " + r.getInicio()+ " / Data Final: " + r.getFim());
         }
     }
 
